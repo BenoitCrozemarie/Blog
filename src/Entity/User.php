@@ -4,13 +4,17 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
+
 {
     /**
      * @ORM\Id
@@ -20,6 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
+
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
@@ -38,18 +43,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $firstname;
 
 
-
-
-
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $lastname;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
 
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
@@ -65,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 
     /**
      * A visual identifier that represents this user.

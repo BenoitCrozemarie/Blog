@@ -35,6 +35,12 @@ class Article
     private $url;
 
     /**
+
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $user;
+  
+    /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article")
      */
     private $comments;
@@ -43,6 +49,7 @@ class Article
     {
         $this->comments = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -57,6 +64,17 @@ class Article
     public function setTitle(string $Title): self
     {
         $this->Title = $Title;
+
+        return $this;
+    }
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
