@@ -109,7 +109,7 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
 
     }
-}
+
 
     /**
      * @Route ("/visitor/articles", name="list_articles")
