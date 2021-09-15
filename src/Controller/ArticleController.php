@@ -59,23 +59,26 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/user/dashboard/update/{idArticle}', name: 'article_modify')]
+    #[Route('/user/dashboard/article/{idArticle}', name: 'article_modify')]
     public function updateArticle(
         
-        $idArticle,
+        $idArticle = 0,
         ArticleRepository $articleRepository,
         EntityManagerInterface $entityManager,
         Request $request
     ): RedirectResponse|Response
     {
+        $article = $idArticle == 0 ?  new Article() : $articleRepository->find($idArticle);
+           
         
-        $article = $articleRepository->find($idArticle);
+      
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd('submit');
-            //$article->setUser($user);
+            if($article->getUser() == null){
+                $article->setUser($this->getUser());
+            }
             $entityManager->persist($article);
             $entityManager->flush();
 
