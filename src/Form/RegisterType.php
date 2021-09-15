@@ -4,8 +4,12 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -13,7 +17,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class RegisterType extends AbstractType
 {
 
-    private $userPasswordHasher;
+    private UserPasswordHasherInterface $userPasswordHasher;
 
     public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
@@ -47,6 +51,9 @@ class RegisterType extends AbstractType
                     new NotBlank()
                 ]
             ] )
+            ->add('submit', SubmitType::class, [
+                'label' => 'Register'
+            ])
             ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
                 /** @var User $user */
                 $user = $event->getData();

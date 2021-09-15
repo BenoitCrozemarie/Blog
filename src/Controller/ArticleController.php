@@ -3,17 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-
+use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Comment;
-use App\Repository\CommentRepository;
-use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,10 +21,8 @@ class ArticleController extends AbstractController
 
 
     #[Route('/user/dashboard/{idUser}', name: 'dashboard_user')]
-    public function dashboard($idUser, ArticleRepository $articleRepository, UserRepository $userRepository)
+    public function dashboard($idUser, ArticleRepository $articleRepository, UserRepository $userRepository): Response
     {
-
-
         $user = $userRepository->find($idUser);
 
         $articles = $articleRepository->findBy(['user' => $user]);
@@ -37,14 +33,21 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    /**
+     * @param $idUser
+     * @param UserRepository $userRepository
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
     #[Route('/user/dashboard/{idUser}/create', name: 'article_create')]
     public function createArticle(
         $idUser,
-        ArticleRepository $articleRepository,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         Request $request
-    ) {
+    ): RedirectResponse|Response
+    {
         $user = $userRepository->find($idUser);
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
@@ -72,7 +75,8 @@ class ArticleController extends AbstractController
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         Request $request
-    ) {
+    ): RedirectResponse|Response
+    {
         $user = $userRepository->find($idUser);
         $article = $articleRepository->find($idArticle);
         $form = $this->createForm(ArticleType::class, $article);
@@ -99,7 +103,8 @@ class ArticleController extends AbstractController
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         ArticleRepository $articleRepository
-    ) {
+    ): RedirectResponse
+    {
         $user = $userRepository->find($idUser);
         $article = $articleRepository->find($idArticle);
 
@@ -107,7 +112,6 @@ class ArticleController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
-
     }
 
 
