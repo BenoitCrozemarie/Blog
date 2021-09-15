@@ -27,12 +27,12 @@
 				{% if article.url is not null %}
 					<img src="{{article.url}}" alt="" width="100px" height="100px">
 				{% endif %}
-				<a href="{{path('article_modify',{idUser:user.id, idArticle: article.id})}}">Modifier</a>
-				<a href="{{path('article_delete',{idUser:user.id, idArticle: article.id})}}">Supprimer</a>
+				<a href="{{path('article_modify',{ idArticle: article.id})}}">Modifier</a>
+				<a href="{{path('article_delete',{ idArticle: article.id})}}">Supprimer</a>
 			</div>
 		{% endfor %}
 
-		<a href="{{path('article_create',{idUser:user.id})}}">Ajouter</a>
+		<a href="{{path('article_create')}}">Ajouter</a>
 
 	</div>
 

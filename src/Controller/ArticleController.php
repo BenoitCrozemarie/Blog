@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
 
-
+///////////////////////////USER/DASHBOARD//////////////////////////////////
 
     #[Route('/user/dashboard', name: 'dashboard_user')]
     public function dashboard(ArticleRepository $articleRepository, UserRepository $userRepository): Response
@@ -33,29 +33,21 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    /**
-     * @param $idUser
-     * @param UserRepository $userRepository
-     * @param EntityManagerInterface $entityManager
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
-    #[Route('/user/dashboard/{idUser}/create', name: 'article_create')]
-    public function createArticle(
-        $idUser,
-        UserRepository $userRepository,
+    
+    #[Route('/user/dashboard/create', name: 'article_create')]
+    public function newArticle(
         EntityManagerInterface $entityManager,
         Request $request
     ): RedirectResponse|Response
     {
-        $user = $userRepository->find($idUser);
+        
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd('submit');
-            $article->setUser($user);
+            
+            $article->setUser($this->getUser());
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -67,17 +59,16 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/user/dashboard/{idUser}/update/{idArticle}', name: 'article_modify')]
+    #[Route('/user/dashboard/update/{idArticle}', name: 'article_modify')]
     public function updateArticle(
-        $idUser,
+        
         $idArticle,
         ArticleRepository $articleRepository,
-        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         Request $request
     ): RedirectResponse|Response
     {
-        $user = $userRepository->find($idUser);
+        
         $article = $articleRepository->find($idArticle);
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
@@ -96,24 +87,24 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/user/dashboard/{idUser}/delete/{idArticle}', name: 'article_delete')]
+    #[Route('/user/dashboard/delete/{idArticle}', name: 'article_delete')]
     public function deleteArticle(
-        $idUser,
         $idArticle,
-        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         ArticleRepository $articleRepository
     ): RedirectResponse
     {
-        $user = $userRepository->find($idUser);
+       
         $article = $articleRepository->find($idArticle);
 
-        $entityManager->remove($article);
-        $entityManager->flush();
+        if($this->getUser() == $article->getUser()){
+            $entityManager->remove($article);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('dashboard_user');
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * @Route ("/visitor/articles", name="list_articles")
      * @param ArticleRepository $articleRepository
