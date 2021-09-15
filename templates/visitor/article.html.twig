@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List articles{% endblock %}
+
+{% block body %}
+    <h1>Article n°{{ article.id }}</h1>
+
+    <h3>{{ article.title }}</h3>
+    <p>{{ article.content }}</p>
+
+    <h3>Commentaires :</h3>
+    {% for comment in article.comments %}
+        <p>{{ comment.commenter }} : {{ comment.content }}</p>
+        <p><sub>{{ comment.date|date("d/m/Y") }}</sub></p>
+    {% endfor %}
+
+    <form action="" method="post">
+        <h3>Post your comment :</h3>
+        <label for="commenter">Tell us your name first :</label>
+        <input type="text" id="commenter" name="commenter" placeholder="Your name :">
+
+        <label for="comment"><sub>Tell us what you think of this article :</sub></label>
+        <textarea id="comment" name="comment" rows="5" cols="33" placeholder="Your comment"></textarea>
+        <input type="submit" value="Send">
+    </form>
+{% endblock %}
