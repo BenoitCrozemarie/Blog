@@ -20,10 +20,10 @@ class ArticleController extends AbstractController
 
 
 
-    #[Route('/user/dashboard/{idUser}', name: 'dashboard_user')]
-    public function dashboard($idUser, ArticleRepository $articleRepository, UserRepository $userRepository): Response
+    #[Route('/user/dashboard', name: 'dashboard_user')]
+    public function dashboard(ArticleRepository $articleRepository, UserRepository $userRepository): Response
     {
-        $user = $userRepository->find($idUser);
+        $user = $userRepository->find($this->getUser()->getId());
 
         $articles = $articleRepository->findBy(['user' => $user]);
 
@@ -59,7 +59,7 @@ class ArticleController extends AbstractController
             $entityManager->persist($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
+            return $this->redirectToRoute('dashboard_user');
         }
 
         return $this->render('user/formArticle.html.twig', [
@@ -88,7 +88,7 @@ class ArticleController extends AbstractController
             $entityManager->persist($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
+            return $this->redirectToRoute('dashboard_user');
         }
 
         return $this->render('user/formArticle.html.twig', [
@@ -111,7 +111,7 @@ class ArticleController extends AbstractController
         $entityManager->remove($article);
         $entityManager->flush();
 
-        return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
+        return $this->redirectToRoute('dashboard_user');
     }
 
     /**
