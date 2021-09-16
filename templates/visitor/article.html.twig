@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List articles{% endblock %}
+{% block title %}List articles
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-
+	<div class="container">
         <div class="card mb-3 col-md-12">
             <div class="card-header">{{ article.title }}</div>
             <img src="{{ article.url }}" class="card-img-top" alt="img of the article">
@@ -73,10 +73,12 @@
         <div class="col-md-6 m-auto">
             <form action="" method="post">
                 <h3>Post your comment :</h3>
-                <div class="mb-3">
-                    <label for="commenter" class="form-label">Tell us your name first :</label>
-                    <input type="text" id="commenter" name="commenter" class="form-control" placeholder="Your name :">
-                </div>
+                               {% if app.user is null %}
+				<div class="mb-3"> {# if connected user then remove field  #}
+					<label for="commenter" class="form-label">Tell us your name first :</label>
+					<input type="text" id="commenter" name="commenter" class="form-control" placeholder="Your name :">
+				</div>
+                {% endif %}
                 <div class="mb-3">
                     <label for="comment" class="form-label">Tell us what you think of this article :</label>
                     <textarea id="comment" name="comment" rows="5" cols="33" class="form-control"
