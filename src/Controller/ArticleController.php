@@ -19,12 +19,13 @@ use App\Service\FileUploader;
 class ArticleController extends AbstractController
 {
 
+    ///////////////////////////USER/DASHBOARD//////////////////////////////////
 
+    #[Route('/user/dashboard', name: 'dashboard_user')]
+    public function dashboard(ArticleRepository $articleRepository, UserRepository $userRepository): Response
 
-    #[Route('/user/dashboard/{idUser}', name: 'dashboard_user')]
-    public function dashboard($idUser, ArticleRepository $articleRepository, UserRepository $userRepository): Response
     {
-        $user = $userRepository->find($idUser);
+        $user = $userRepository->find($this->getUser()->getId());
 
         $articles = $articleRepository->findBy(['user' => $user]);
 
@@ -34,63 +35,28 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    /**
-     * @param $idUser
-     * @param UserRepository $userRepository
-     * @param EntityManagerInterface $entityManager
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
-    #[Route('/user/dashboard/{idUser}/create', name: 'article_create')]
-    public function createArticle(
-        $idUser,
-        UserRepository $userRepository,
-        EntityManagerInterface $entityManager,
-        Request $request
-    ): RedirectResponse|Response
-    {
-        $user = $userRepository->find($idUser);
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            //dd('submit');
-            $article->setUser($user);
-            $entityManager->persist($article);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
-        }
-
-        return $this->render('user/formArticle.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    #[Route('/user/dashboard/{idUser}/update/{idArticle}', name: 'article_modify')]
+    #[Route('/user/dashboard/article/{idArticle}', name: 'article_create_modify')]
     public function updateArticle(
-        $idUser,
-        $idArticle,
 
+
+        $idArticle = 0,
         ArticleRepository $articleRepository,
-        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         Request $request
-    ): RedirectResponse|Response
-    {
-        $user = $userRepository->find($idUser);
-        $article = $articleRepository->find($idArticle);
+    ): RedirectResponse|Response {
+        $article = $idArticle == 0 ?  new Article() : $articleRepository->find($idArticle);
+
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd('submit');
-            //$article->setUser($user);
+            if ($article->getUser() == null) {
+                $article->setUser($this->getUser());
+            }
             $entityManager->persist($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
+            return $this->redirectToRoute('dashboard_user');
         }
 
         return $this->render('user/formArticle.html.twig', [
@@ -98,27 +64,27 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/user/dashboard/{idUser}/delete/{idArticle}', name: 'article_delete')]
+    #[Route('/user/dashboard/delete/{idArticle}', name: 'article_delete')]
     public function deleteArticle(
-        $idUser,
         $idArticle,
-        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         ArticleRepository $articleRepository
-    ): RedirectResponse
-    {
-        $user = $userRepository->find($idUser);
+    ): RedirectResponse {
+
         $article = $articleRepository->find($idArticle);
 
-        $entityManager->remove($article);
-        $entityManager->flush();
+        if ($this->getUser() == $article->getUser()) {
+            $entityManager->remove($article);
+            $entityManager->flush();
+        }
 
-        return $this->redirectToRoute('dashboard_user', ['idUser' => $idUser]);
+        return $this->redirectToRoute('dashboard_user');
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * @Route ("/visitor/articles", name="list_articles")
+     * @Route ("/", name="list_articles")
      * @param ArticleRepository $articleRepository
      * @return Response
      */
@@ -141,6 +107,7 @@ class ArticleController extends AbstractController
     public function showArticle(ArticleRepository $articleRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $article = $articleRepository->find($id);
+        $manager = $article->getUser() == $this->getUser();
 
         if ($request->getMethod() == Request::METHOD_POST) {
             $content = $request->request->get('comment');
@@ -150,10 +117,10 @@ class ArticleController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('visitor_article_id', ['id' => $id]);
-
         }
         return $this->render('visitor/article.html.twig', [
             'article' => $article,
+            'manager' => $manager
         ]);
     }
 
@@ -169,4 +136,3 @@ class ArticleController extends AbstractController
         return $comment;
     }
 }
-
