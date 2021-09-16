@@ -22,12 +22,12 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Title;
+    private $title;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $Content;
+    private $content;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -58,15 +58,16 @@ class Article
 
     public function getTitle(): ?string
     {
-        return $this->Title;
+        return $this->title;
     }
 
-    public function setTitle(string $Title): self
+    public function setTitle(string $title): self
     {
-        $this->Title = $Title;
+        $this->title = $title;
 
         return $this;
     }
+    
     public function getUser(): ?User
     {
         return $this->user;
@@ -81,12 +82,12 @@ class Article
 
     public function getContent(): ?string
     {
-        return $this->Content;
+        return $this->content;
     }
 
-    public function setContent(string $Content): self
+    public function setContent(string $content): self
     {
-        $this->Content = $Content;
+        $this->content = $content;
 
         return $this;
     }

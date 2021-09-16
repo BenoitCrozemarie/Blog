@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use App\Service\CommentService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -104,17 +105,23 @@ class ArticleController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function showArticle(ArticleRepository $articleRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
+    public function showArticle(ArticleRepository $articleRepository, int $id, Request $request, EntityManagerInterface $entityManager, CommentService $commentService): Response
     {
         $article = $articleRepository->find($id);
         $manager = $article->getUser() == $this->getUser();
 
         if ($request->getMethod() == Request::METHOD_POST) {
+            $user = null;
+            
+            if($user = $this->getUser()){
+                $commenter = $user->getFirstname() ." ". $user->getLastname();
+            } else {
+                $commenter = $request->request->get('commenter');
+            }
+            
             $content = $request->request->get('comment');
-            $commenter = $request->request->get('commenter');
-            $comment = $this->commentArticle($article, $content, $commenter);
-            $entityManager->persist($comment);
-            $entityManager->flush();
+            $commentService->newCommentArticle($article, $content, $commenter);
+           
 
             return $this->redirectToRoute('visitor_article_id', ['id' => $id]);
         }
@@ -124,15 +131,5 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    public
-    function commentArticle(Article $article, string $content, string $commenter): Comment
-    {
-        $comment = new Comment();
-        $comment->setDate(new DateTime());
-        $comment->setArticle($article);
-        $comment->setContent($content);
-        $comment->setCommenter($commenter);
-
-        return $comment;
-    }
+    
 }
