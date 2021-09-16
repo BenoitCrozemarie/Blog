@@ -120,7 +120,7 @@ class ArticleController extends AbstractController
             }
             
             $content = $request->request->get('comment');
-            $commentService->newCommentArticle($article, $content, $commenter);
+            $commentService->newCommentArticle($article, $content, $commenter,$user);
            
 
             return $this->redirectToRoute('visitor_article_id', ['id' => $id]);
