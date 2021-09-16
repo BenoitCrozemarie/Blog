@@ -3,27 +3,43 @@
 {% block title %}List articles{% endblock %}
 
 {% block body %}
-    <h1>Article n°{{ article.id }}</h1>
+    <div class="container">
 
-    <h3>{{ article.title }}</h3>
-    <p>{{ article.content }}</p>
-
-    <h3>Commentaires :</h3>
-    {% for comment in article.comments %}
-        <p>{{ comment.commenter }} : {{ comment.content }}</p>
-        <p><sub>{{ comment.date|date("d/m/Y") }}</sub></p>
-        {% if manager %}
+        <div class="card mb-3 col-md-12">
+            <div class="card-header">{{ article.title }}</div>
+            <img src="{{ article.url }}" class="card-img-top" alt="img of the article">
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <p class="card-text">{{ article.content }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p>Commentaires :</p>
+                        {% for comment in article.comments %}
+                            <p class="card-text"><small class="text-muted">{{ comment.commenter }}
+                                    : {{ comment.content }} | {{ comment.date|date("d/m/Y H:i:s") }}</small></p>
+                                    {% if manager %}
             <a href="{{path('comment_delete',{idComment:comment.id})}}">Delete</a>
         {% endif %}
-    {% endfor %}
-
-    <form action="" method="post">
-        <h3>Post your comment :</h3>
-        <label for="commenter">Tell us your name first :</label>
-        <input type="text" id="commenter" name="commenter" placeholder="Your name :">
-
-        <label for="comment"><sub>Tell us what you think of this article :</sub></label>
-        <textarea id="comment" name="comment" rows="5" cols="33" placeholder="Your comment"></textarea>
-        <input type="submit" value="Send">
-    </form>
+                        {% endfor %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 m-auto">
+            <form action="" method="post">
+                <h3>Post your comment :</h3>
+                <div class="mb-3">
+                    <label for="commenter" class="form-label">Tell us your name first :</label>
+                    <input type="text" id="commenter" name="commenter" class="form-control" placeholder="Your name :">
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Tell us what you think of this article :</label>
+                    <textarea id="comment" name="comment" rows="5" cols="33" class="form-control"
+                              placeholder="Your comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

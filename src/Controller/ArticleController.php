@@ -22,6 +22,7 @@ class ArticleController extends AbstractController
 
     #[Route('/user/dashboard', name: 'dashboard_user')]
     public function dashboard(ArticleRepository $articleRepository, UserRepository $userRepository): Response
+
     {
         $user = $userRepository->find($this->getUser()->getId());
 
@@ -79,7 +80,7 @@ class ArticleController extends AbstractController
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * @Route ("/visitor/articles", name="list_articles")
+     * @Route ("/", name="list_articles")
      * @param ArticleRepository $articleRepository
      * @return Response
      */
