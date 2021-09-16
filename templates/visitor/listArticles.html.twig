@@ -4,11 +4,23 @@
 
 {% block body %}
     <h1>Articles</h1>
-
-    {% for article in articles %}
-        <div class="card">
-            <h3><a href="{{ path('visitor_article_id', {id : article.id}) }}">{{ article.title }}</a></h3>
-            <p><sub>{{ article.comments|length }} comments</sub></p>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for article in articles %}
+                <div class="col">
+                    <a href="{{ path('visitor_article_id', {id : article.id}) }}">
+                        <div class="card h-100">
+                            <img src="{{ article.url }}" class="card-img-top" alt="img of the article">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ article.title }}</h5>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">{{ article.comments|length }} comments</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}
