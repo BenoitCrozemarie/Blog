@@ -54,7 +54,7 @@ class NoteRepository extends ServiceEntityRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function average($id): float
+    public function average($id): float|null
     {
         return $this->createQueryBuilder('g')
             ->select("avg(g.note)")

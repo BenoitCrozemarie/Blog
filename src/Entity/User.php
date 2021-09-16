@@ -14,7 +14,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 {
@@ -26,11 +25,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
-
 
 
     /**
@@ -58,6 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
 
@@ -65,22 +63,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->id;
     }
+
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user")
      */
     private $comments;
-
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-    }
 
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     public function setUsername(string $username): self
@@ -98,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**
@@ -176,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Comment[]
+     * @return Collection
      */
     public function getComments(): Collection
     {
@@ -189,27 +183,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->comments[] = $comment;
             $comment->setUser($this);
         }
-      return $this
-      }
-  /**
+        return $this;
+    }
+
+
+    /**
      * @return Collection
      */
-    public function getNotes(): Collection
+
+    public
+    function getNotes(): Collection
     {
         return $this->notes;
     }
 
-    public function addNote(Note $note): self
+    public
+    function addNote(Note $note): self
     {
         if (!$this->notes->contains($note)) {
             $this->notes[] = $note;
             $note->setUser($this);
         }
-
         return $this;
     }
-  
-    public function removeComment(Comment $comment): self
+
+    public
+    function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
@@ -217,10 +216,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $comment->setUser(null);
             }
         }
-          return $this;
+        return $this;
     }
 
-    public function removeNote(Note $note): self
+    public
+    function removeNote(Note $note): self
     {
         if ($this->notes->removeElement($note)) {
             // set the owning side to null (unless already changed)
@@ -228,6 +228,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $note->setUser(null);
             }
         }
-
         return $this;
     }
+}
