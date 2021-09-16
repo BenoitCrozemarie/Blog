@@ -18,10 +18,54 @@
                         {% for comment in article.comments %}
                             <p class="card-text"><small class="text-muted">{{ comment.commenter }}
                                     : {{ comment.content }} | {{ comment.date|date("d/m/Y H:i:s") }}</small></p>
-                                    {% if manager %}
-            <a href="{{path('comment_delete',{idComment:comment.id})}}">Delete</a>
-        {% endif %}
+                            {% if manager %}
+                                <a href="{{ path('comment_delete',{idComment:comment.id}) }}">Delete</a>
+                            {% endif %}
                         {% endfor %}
+
+                        <p>Noter cet article :</p>
+                        <form action="{{ path('set_note',{id:article.id}) }}" method="post">
+                            <div class="rating-box d-flex">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault1" value="1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        1
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault2" value="2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        2
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault3" value="3">
+                                    <label class="form-check-label" for="flexRadioDefault3">
+                                        3
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault4" value="4">
+                                    <label class="form-check-label" for="flexRadioDefault4">
+                                        4
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault5" value="5">
+                                    <label class="form-check-label" for="flexRadioDefault5">
+                                        5
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        <p>Note : {{ rating }}</p>
                     </li>
                 </ul>
             </div>
