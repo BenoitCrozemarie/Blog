@@ -1,6 +1,6 @@
 <?php
 
-namespace App\services;
+namespace App\Service;
 
 use App\Entity\Article;
 use App\Entity\Note;
