@@ -46,7 +46,7 @@ class Article
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="articleId", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="article", orphanRemoval=true)
      */
     private $notes;
 

@@ -184,7 +184,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $comment->setUser($this);
         }
         return $this;
-    }
+      }
 
 
     /**
@@ -207,8 +207,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public
-    function removeComment(Comment $comment): self
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
