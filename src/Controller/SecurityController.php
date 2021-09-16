@@ -16,7 +16,7 @@ class SecurityController extends AbstractController
     {
         if ($user = $this->getUser()) {
             if (in_array('ROLE_USER', $user->getRoles())) {
-                return $this->redirectToRoute('dashboard_user', ['idUser' => $this->get('id')]);
+                return $this->redirectToRoute('dashboard_user', ['idUser' => $user->getId()]);
             }
         }
         // get the login error if there is one

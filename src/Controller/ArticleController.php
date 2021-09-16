@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\FileUploader;
 
 class ArticleController extends AbstractController
 {
@@ -71,6 +72,7 @@ class ArticleController extends AbstractController
     public function updateArticle(
         $idUser,
         $idArticle,
+
         ArticleRepository $articleRepository,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
