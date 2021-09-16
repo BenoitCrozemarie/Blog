@@ -5,48 +5,87 @@
 
 {% block body %}
 	<div class="container">
+        <div class="card mb-3 col-md-12">
+            <div class="card-header">{{ article.title }}</div>
+            <img src="{{ article.url }}" class="card-img-top" alt="img of the article">
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <p class="card-text">{{ article.content }}</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p>Commentaires :</p>
+                        {% for comment in article.comments %}
+                            <p class="card-text"><small class="text-muted">{{ comment.commenter }}
+                                    : {{ comment.content }} | {{ comment.date|date("d/m/Y H:i:s") }}</small></p>
+                            {% if manager %}
+                                <a href="{{ path('comment_delete',{idComment:comment.id}) }}">Delete</a>
+                            {% endif %}
+                        {% endfor %}
 
-		<div class="card mb-3 col-md-12">
-			<div class="card-header">{{ article.title }}</div>
-			<img src="{{ article.url }}" class="card-img-top" alt="img of the article">
-			<div class="card-body">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item">
-						<p class="card-text">{{ article.content }}</p>
-					</li>
-					<li class="list-group-item">
-						<p>Commentaires :</p>
-						{% for comment in article.comments %}
-							<p class="card-text">
-								<small class="text-muted">{{ comment.commenter }}
-									:
-									{{ comment.content }}
-									|
-									{{ comment.date|date("d/m/Y H:i:s") }}</small>
-							</p>
-							{% if manager %}
-								<a href="{{path('comment_delete',{idComment:comment.id})}}">Delete</a>
-							{% endif %}
-						{% endfor %}
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="col-md-6 m-auto">
-			<form action="" method="post">
-				<h3>Post your comment :</h3>
-               {% if app.user is null %}
+                        <p>Noter cet article :</p>
+                        <form action="{{ path('set_note',{id:article.id}) }}" method="post">
+                            <div class="rating-box d-flex">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault1" value="1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        1
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault2" value="2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        2
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault3" value="3">
+                                    <label class="form-check-label" for="flexRadioDefault3">
+                                        3
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault4" value="4">
+                                    <label class="form-check-label" for="flexRadioDefault4">
+                                        4
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                           id="flexRadioDefault5" value="5">
+                                    <label class="form-check-label" for="flexRadioDefault5">
+                                        5
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        <p>Note : {{ rating }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 m-auto">
+            <form action="" method="post">
+                <h3>Post your comment :</h3>
+                               {% if app.user is null %}
 				<div class="mb-3"> {# if connected user then remove field  #}
 					<label for="commenter" class="form-label">Tell us your name first :</label>
 					<input type="text" id="commenter" name="commenter" class="form-control" placeholder="Your name :">
 				</div>
                 {% endif %}
-				<div class="mb-3">
-					<label for="comment" class="form-label">Tell us what you think of this article :</label>
-					<textarea id="comment" name="comment" rows="5" cols="33" class="form-control" placeholder="Your comment"></textarea>
-				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
-		</div>
-	</div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Tell us what you think of this article :</label>
+                    <textarea id="comment" name="comment" rows="5" cols="33" class="form-control"
+                              placeholder="Your comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
