@@ -6,9 +6,12 @@ use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,12 +105,17 @@ class ArticleController extends AbstractController
      * @param int $id
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param NoteRepository $noteRepository
      * @return Response
      */
-    public function showArticle(ArticleRepository $articleRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
+    public function showArticle(ArticleRepository $articleRepository, int $id, Request $request, EntityManagerInterface $entityManager, NoteRepository $noteRepository): Response
     {
         $article = $articleRepository->find($id);
         $manager = $article->getUser() == $this->getUser();
+        try {
+            $rating = $noteRepository->average($article);
+        } catch (NoResultException | NonUniqueResultException $e) {
+        }
 
         if ($request->getMethod() == Request::METHOD_POST) {
             $content = $request->request->get('comment');
@@ -120,7 +128,8 @@ class ArticleController extends AbstractController
         }
         return $this->render('visitor/article.html.twig', [
             'article' => $article,
-            'manager' => $manager
+            'manager' => $manager,
+            'rating' => $rating,
         ]);
     }
 

@@ -45,9 +45,15 @@ class Article
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="articleId", orphanRemoval=true)
+     */
+    private $notes;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
 
@@ -127,6 +133,36 @@ class Article
             // set the owning side to null (unless already changed)
             if ($comment->getArticle() === $this) {
                 $comment->setArticle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getArticle() === $this) {
+                $note->setArticle(null);
             }
         }
 
