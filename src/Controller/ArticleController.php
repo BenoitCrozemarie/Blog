@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\FileUploader;
 
 class ArticleController extends AbstractController
 {
@@ -36,6 +37,7 @@ class ArticleController extends AbstractController
 
     #[Route('/user/dashboard/article/{idArticle}', name: 'article_create_modify')]
     public function updateArticle(
+
 
         $idArticle = 0,
         ArticleRepository $articleRepository,
@@ -78,7 +80,9 @@ class ArticleController extends AbstractController
 
         return $this->redirectToRoute('dashboard_user');
     }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * @Route ("/", name="list_articles")
      * @param ArticleRepository $articleRepository

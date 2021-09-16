@@ -25,7 +25,7 @@
 				<h2>{{article.title}}</h2>
 				<p>{{article.content}}</p>
 				{% if article.url is not null %}
-					<img src="{{article.url}}" alt="" width="100px" height="100px">
+					<img src="{{ asset('uploads/'~article.url) }}" alt="" width="100px" height="100px">
 				{% endif %}
 				<a href="{{path('visitor_article_id',{ id: article.id})}}">Detail</a>
 				<a href="{{path('article_create_modify',{ idArticle: article.id})}}">Modifier</a>
