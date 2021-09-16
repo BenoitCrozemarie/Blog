@@ -170,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Comment[]
+     * @return Collection
      */
     public function getComments(): Collection
     {
@@ -186,21 +186,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
       }
 
+
     /**
      * @return Collection
      */
-    public function getNotes(): Collection
+
+    public
+    function getNotes(): Collection
     {
         return $this->notes;
     }
 
-    public function addNote(Note $note): self
+    public
+    function addNote(Note $note): self
     {
         if (!$this->notes->contains($note)) {
             $this->notes[] = $note;
             $note->setUser($this);
         }
-
         return $this;
     }
 
@@ -215,7 +218,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeNote(Note $note): self
+    public
+    function removeNote(Note $note): self
     {
         if ($this->notes->removeElement($note)) {
             // set the owning side to null (unless already changed)
@@ -223,7 +227,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $note->setUser(null);
             }
         }
-
         return $this;
     }
 }
