@@ -46,7 +46,7 @@ class Article
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="articleId", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="article", orphanRemoval=true)
      */
     private $notes;
 
@@ -111,7 +111,7 @@ class Article
     }
 
     /**
-     * @return Collection|Comment[]
+     * @return Collection
      */
     public function getComments(): Collection
     {
@@ -141,7 +141,7 @@ class Article
     }
 
     /**
-     * @return Collection|Note[]
+     * @return Collection
      */
     public function getNotes(): Collection
     {
