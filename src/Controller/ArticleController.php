@@ -17,9 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
-
-
-
+    /**
+     * @param $idUser
+     * @param ArticleRepository $articleRepository
+     * @param UserRepository $userRepository
+     * @return Response
+     */
     #[Route('/user/dashboard/{idUser}', name: 'dashboard_user')]
     public function dashboard($idUser, ArticleRepository $articleRepository, UserRepository $userRepository): Response
     {
@@ -115,7 +118,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route ("/visitor/articles", name="list_articles")
+     * @Route ("/", name="list_articles")
      * @param ArticleRepository $articleRepository
      * @return Response
      */
