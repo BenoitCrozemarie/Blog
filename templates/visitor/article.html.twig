@@ -12,6 +12,9 @@
     {% for comment in article.comments %}
         <p>{{ comment.commenter }} : {{ comment.content }}</p>
         <p><sub>{{ comment.date|date("d/m/Y") }}</sub></p>
+        {% if manager %}
+            <a href="{{path('comment_delete',{idComment:comment.id})}}">Delete</a>
+        {% endif %}
     {% endfor %}
 
     <form action="" method="post">

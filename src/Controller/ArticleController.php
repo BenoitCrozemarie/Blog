@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
 
-///////////////////////////USER/DASHBOARD//////////////////////////////////
+    ///////////////////////////USER/DASHBOARD//////////////////////////////////
 
     #[Route('/user/dashboard', name: 'dashboard_user')]
     public function dashboard(ArticleRepository $articleRepository, UserRepository $userRepository): Response
@@ -33,50 +33,21 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    
-    #[Route('/user/dashboard/create', name: 'article_create')]
-    public function newArticle(
-        EntityManagerInterface $entityManager,
-        Request $request
-    ): RedirectResponse|Response
-    {
-        
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            
-            $article->setUser($this->getUser());
-            $entityManager->persist($article);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('dashboard_user');
-        }
-
-        return $this->render('user/formArticle.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    #[Route('/user/dashboard/article/{idArticle}', name: 'article_modify')]
+    #[Route('/user/dashboard/article/{idArticle}', name: 'article_create_modify')]
     public function updateArticle(
-        
+
         $idArticle = 0,
         ArticleRepository $articleRepository,
         EntityManagerInterface $entityManager,
         Request $request
-    ): RedirectResponse|Response
-    {
+    ): RedirectResponse|Response {
         $article = $idArticle == 0 ?  new Article() : $articleRepository->find($idArticle);
-           
-        
-      
+
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($article->getUser() == null){
+            if ($article->getUser() == null) {
                 $article->setUser($this->getUser());
             }
             $entityManager->persist($article);
@@ -95,19 +66,18 @@ class ArticleController extends AbstractController
         $idArticle,
         EntityManagerInterface $entityManager,
         ArticleRepository $articleRepository
-    ): RedirectResponse
-    {
-       
+    ): RedirectResponse {
+
         $article = $articleRepository->find($idArticle);
 
-        if($this->getUser() == $article->getUser()){
+        if ($this->getUser() == $article->getUser()) {
             $entityManager->remove($article);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('dashboard_user');
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * @Route ("/visitor/articles", name="list_articles")
      * @param ArticleRepository $articleRepository
@@ -132,6 +102,7 @@ class ArticleController extends AbstractController
     public function showArticle(ArticleRepository $articleRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $article = $articleRepository->find($id);
+        $manager = $article->getUser() == $this->getUser();
 
         if ($request->getMethod() == Request::METHOD_POST) {
             $content = $request->request->get('comment');
@@ -141,10 +112,10 @@ class ArticleController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('visitor_article_id', ['id' => $id]);
-
         }
         return $this->render('visitor/article.html.twig', [
             'article' => $article,
+            'manager' => $manager
         ]);
     }
 
@@ -160,4 +131,3 @@ class ArticleController extends AbstractController
         return $comment;
     }
 }
-
