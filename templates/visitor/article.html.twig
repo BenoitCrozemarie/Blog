@@ -18,12 +18,14 @@
                         {% for comment in article.comments %}
                             <p class="card-text"><small class="text-muted">{{ comment.commenter }}
                                     : {{ comment.content }} | {{ comment.date|date("d/m/Y H:i:s") }}</small></p>
+                                    {% if manager %}
+            <a href="{{path('comment_delete',{idComment:comment.id})}}">Delete</a>
+        {% endif %}
                         {% endfor %}
                     </li>
                 </ul>
             </div>
         </div>
-
         <div class="col-md-6 m-auto">
             <form action="" method="post">
                 <h3>Post your comment :</h3>
@@ -36,7 +38,6 @@
                     <textarea id="comment" name="comment" rows="5" cols="33" class="form-control"
                               placeholder="Your comment"></textarea>
                 </div>
-
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

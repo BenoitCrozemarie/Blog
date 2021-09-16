@@ -50,7 +50,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('dashboard_user', ['idUser' => $token->getUser()->getId()]));
+        return new RedirectResponse($this->urlGenerator->generate('dashboard_user'));
 //        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
